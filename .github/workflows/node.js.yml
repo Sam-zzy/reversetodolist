@@ -10,22 +10,36 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  build-and-test:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+        node-version: '16'
+
+    # Install Backend Dependencies
+    - name: Install Backend Dependencies
+      working-directory: ./backend
+      run: |
+        npm ci
+        npm test
+
+    # Install Frontend Dependencies
+    - name: Install Frontend Dependencies
+      working-directory: ./frontend
+      run: |
+        npm ci
+        npm run build
+
+    # Install E2E Test Dependencies
+    - name: Install E2E Test Dependencies
+      working-directory: ./e2e-tests
+      run: |
+        npm ci
+        npm test
+
