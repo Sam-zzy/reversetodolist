@@ -26,7 +26,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: ./backend  # 后端的构建上下文
-        dockerfile: Dockerfile  # 明确指定 Dockerfile
+        file: Dockerfile  # 明确指定 Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/reversetodolist-backend:latest
 
@@ -35,6 +35,6 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: ./frontend  # 前端的构建上下文
-        dockerfile: Dockerfile  # 明确指定 Dockerfile
+        file: Dockerfile  # 明确指定 Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/reversetodolist-frontend:latest
