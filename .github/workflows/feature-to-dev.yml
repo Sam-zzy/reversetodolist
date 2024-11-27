@@ -10,37 +10,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: 检出代码
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Step 2: 设置 Node.js 环境
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '22.x'
 
-    # Step 3: 安装后端依赖并运行单元测试
     - name: Install Backend Dependencies and Run Unit Tests
       working-directory: ./backend
       run: |
         npm install
         npm test
 
-    # Step 4: 安装前端依赖并验证构建
     - name: Install Frontend Dependencies
       working-directory: ./frontend
       run: |
         npm install
 
-    # Step 5: 自动合并 Dev 到 Main
     - name: Merge Dev to Main
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git fetch origin main
-        git checkout main
-        git merge dev --no-ff -m "Automatically merged dev into main"
-        git push origin main
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: devmasx/merge-branch@master
+      with:
+        target_branch: main
+        github_token: ${{ secrets.GITHUB_TOKEN }}
