@@ -28,6 +28,11 @@ jobs:
       working-directory: ./frontend
       run: |
         npm install
+        npm test
+
+    - name: Start services
+      run: |
+        docker-compose up -d
 
     - name: Run E2E Tests
       working-directory: ./e2e-tests
