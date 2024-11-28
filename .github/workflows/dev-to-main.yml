@@ -1,9 +1,13 @@
-name: Dev to Main
-
 on:
   push:
     branches:
       - main
+  workflow_run:
+    workflows:
+      - Feature to Dev
+    types:
+      - completed
+
 
 jobs:
   build-test-and-deploy:
