@@ -34,4 +34,4 @@ jobs:
       with:
         from_branch: dev
         target_branch: main
-        github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
