@@ -29,12 +29,8 @@ jobs:
       run: |
         npm install
 
-
-
     - name: Merge Dev to Main
-      uses: devmasx/merge-branch@my-feature
+      uses: devmasx/merge-branch@master
       with:
-          target_branch: main
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          message: 'Auto-merge dev into main from Feature to Dev workflow'
-          disable_fastforwards: true
+        target_branch: main
+        github_token: ${{ secrets.GITHUB_TOKEN }}
