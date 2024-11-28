@@ -1,38 +1,59 @@
-name: Feature to Dev
+name: Build, Test, and Publish
 
 on:
   push:
     branches:
-      - dev
+      - main
 
 jobs:
-  build-and-test:
+  build-test-and-publish:
     runs-on: ubuntu-latest
 
     steps:
+    # Step 1: 检出代码
     - name: Checkout code
       uses: actions/checkout@v3
 
+    # Step 2: 设置 Node.js 环境
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '22.x'
 
+    # Step 3: 安装后端依赖并运行单元测试
     - name: Install Backend Dependencies and Run Unit Tests
       working-directory: ./backend
       run: |
         npm install
         npm test
 
+    # Step 4: 安装前端依赖
     - name: Install Frontend Dependencies
       working-directory: ./frontend
       run: |
         npm install
 
-    - name: Merge Dev to Main
-      uses: devmasx/merge-branch@master
+    # Step 5: 登录 DockerHub
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
       with:
-        type: now
-        from_branch: dev
-        target_branch: main
-        github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    # Step 6: 构建并推送后端镜像
+    - name: Build and Push Backend Docker Image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./backend
+        file: ./backend/Dockerfile
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/reversetodolist-backend:latest
+
+    # Step 7: 构建并推送前端镜像
+    - name: Build and Push Frontend Docker Image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./frontend
+        file: ./frontend/Dockerfile
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/reversetodolist-frontend:latest
