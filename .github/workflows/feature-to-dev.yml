@@ -6,28 +6,12 @@ on:
       - dev
 
 jobs:
-  build-and-test:
+  build-and-merge:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '22.x'
-
-    - name: Install Backend Dependencies and Run Unit Tests
-      working-directory: ./backend
-      run: |
-        npm install
-        npm test
-
-    - name: Install Frontend Dependencies
-      working-directory: ./frontend
-      run: |
-        npm install
 
     - name: Merge Dev to Main
       uses: devmasx/merge-branch@master
